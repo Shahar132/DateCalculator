@@ -21,12 +21,13 @@ function calculatePeriod() {
         return;
     }
 
-    let currentDate = new Date(startDate);
     let months = 0;
+    let currentDate = new Date(startDate);
 
     // Count complete calendar months
+    // Always calculate from the original start date
     while (true) {
-        const nextMonth = addOneMonth(currentDate);
+        const nextMonth = addMonthsSafe(startDate, months + 1);
 
         if (nextMonth <= endDate) {
             months++;
