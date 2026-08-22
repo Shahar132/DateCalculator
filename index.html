@@ -6,9 +6,6 @@
     <title>מחשבון תקופה</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
-
-
 <body>
 
     <div class="container">
@@ -28,6 +25,29 @@
         <button id="calculateBtn">חשב</button>
 
         <div id="result"></div>
+
+        <hr>
+
+        <h2>הוספת ערבות</h2>
+
+        <div class="date-field">
+            <label for="guaranteeDate">תאריך התחלה:</label>
+            <input type="date" id="guaranteeDate">
+        </div>
+
+        <div class="date-field">
+            <label for="guaranteeYears">שנים:</label>
+            <input type="number" id="guaranteeYears" value="3" min="0">
+        </div>
+
+        <div class="date-field">
+            <label for="guaranteeMonths">חודשים:</label>
+            <input type="number" id="guaranteeMonths" value="4" min="0">
+        </div>
+
+        <button id="guaranteeBtn">חשב תאריך ערבות</button>
+
+        <div id="guaranteeResult"></div>
 
     </div>
 

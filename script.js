@@ -36,7 +36,7 @@ function calculatePeriod() {
         }
     }
 
-    // Calculate the remaining days after the complete months
+    // Calculate remaining days
     const millisecondsPerDay = 1000 * 60 * 60 * 24;
 
     const remainingDays = Math.round(
@@ -46,7 +46,7 @@ function calculatePeriod() {
     const weeks = Math.floor(remainingDays / 7);
     const days = remainingDays % 7;
 
-    // The month in which the period ends
+    // Get the final month
     const lastMonth = endDate.toLocaleDateString("he-IL", {
         month: "long",
         year: "numeric"
@@ -59,7 +59,7 @@ function calculatePeriod() {
 }
 
 
-// Adds one calendar month while handling months with different lengths
+// Adds one calendar month safely
 function addOneMonth(date) {
     const originalDay = date.getDate();
 
@@ -80,4 +80,86 @@ function addOneMonth(date) {
     );
 
     return newDate;
+}
+
+
+// ======================================================
+// Guarantee calculator
+// ======================================================
+
+const guaranteeDateInput = document.getElementById("guaranteeDate");
+const guaranteeYearsInput = document.getElementById("guaranteeYears");
+const guaranteeMonthsInput = document.getElementById("guaranteeMonths");
+const guaranteeBtn = document.getElementById("guaranteeBtn");
+const guaranteeResult = document.getElementById("guaranteeResult");
+
+guaranteeBtn.addEventListener("click", calculateGuaranteeDate);
+
+function calculateGuaranteeDate() {
+
+    // Check that a start date was selected
+    if (!guaranteeDateInput.value) {
+        guaranteeResult.innerHTML = "יש לבחור תאריך התחלה.";
+        return;
+    }
+
+    const years = Number(guaranteeYearsInput.value);
+    const months = Number(guaranteeMonthsInput.value);
+
+    // Validate period values
+    if (
+        years < 0 ||
+        months < 0 ||
+        !Number.isInteger(years) ||
+        !Number.isInteger(months)
+    ) {
+        guaranteeResult.innerHTML =
+            "יש להזין מספר תקין של שנים וחודשים.";
+        return;
+    }
+
+    const startDate = new Date(guaranteeDateInput.value);
+
+    // Convert the entire period to months
+    const totalMonths = (years * 12) + months;
+
+    const endDate = addMonthsSafe(startDate, totalMonths);
+
+    const formattedDate = endDate.toLocaleDateString("he-IL");
+
+    guaranteeResult.innerHTML = `
+        <p>
+            <strong>תקופת הערבות:</strong>
+            ${years} שנים ו-${months} חודשים
+        </p>
+
+        <p>
+            <strong>תאריך סיום הערבות:</strong>
+            ${formattedDate}
+        </p>
+    `;
+}
+
+
+// Adds months while handling different month lengths
+function addMonthsSafe(date, monthsToAdd) {
+    const originalDay = date.getDate();
+
+    const targetDate = new Date(
+        date.getFullYear(),
+        date.getMonth() + monthsToAdd,
+        1
+    );
+
+    const lastDayOfTargetMonth = new Date(
+        targetDate.getFullYear(),
+        targetDate.getMonth() + 1,
+        0
+    ).getDate();
+
+    targetDate.setDate(
+        Math.min(originalDay, lastDayOfTargetMonth)
+    );
+
+    return targetDate;
 }
